@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:route_tracker/views/google_map_view.dart';
+
 
 void main() {
-  runApp(const MyApp());
+  runApp(const RouteTrackerApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class RouteTrackerApp extends StatelessWidget {
+  const RouteTrackerApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: GoogleMap(
-        initialCameraPosition: CameraPosition(
-          target: LatLng(29.86398403496827, 31.302744328217248)),));
+      debugShowCheckedModeBanner: false,
+      home: GoogleMapView(),
+    
+    );
   }
 }
