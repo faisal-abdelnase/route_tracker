@@ -4,17 +4,19 @@ class LocationService {
   Location location = Location();
 
 
-  Future<bool> checkAndRequestLocationService() async {
+  Future<void> checkAndRequestLocationService() async {
     var isServiceEnable = await location.serviceEnabled();
 
     if(!isServiceEnable){
       isServiceEnable = await location.requestService();
       if(!isServiceEnable){
-        return false;
+
+        throw LocationServiceException();
+      
       }
     }
 
-    return true;
+  
 
   }
 
@@ -22,26 +24,29 @@ class LocationService {
 
 
 
-  Future<bool> checkAndRequestLocationPermission() async {
+  Future<void> checkAndRequestLocationPermission() async {
     var permissionStatus = await location.hasPermission();
 
     if(permissionStatus == PermissionStatus.denied){
       permissionStatus = await location.requestPermission();
-      return permissionStatus == PermissionStatus.granted;
+      if(permissionStatus != PermissionStatus.granted){
+        throw LocationPermissionException();
+      }
     }
 
     if(permissionStatus == PermissionStatus.deniedForever){
-      return false;
+      throw LocationPermissionException();
     }
 
-    return true;
   }
 
 
 
 
 
-  void getRealTimeLocationData(void Function(LocationData)? onData){
+  void getRealTimeLocationData(void Function(LocationData)? onData) async{
+    await checkAndRequestLocationService();
+    await checkAndRequestLocationPermission();
     location.onLocationChanged.listen(onData);
   }
 
@@ -49,9 +54,17 @@ class LocationService {
 
 
   Future<LocationData> getLocation()async{
+    await checkAndRequestLocationService();
+    await checkAndRequestLocationPermission();
     return await location.getLocation();
   }
 
 
 
 }
+
+
+
+class LocationServiceException implements Exception{}
+
+class LocationPermissionException implements Exception{}
