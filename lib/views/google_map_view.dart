@@ -91,3 +91,9 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     
   }
 }
+
+
+// create text field
+// listen to the text field
+// search place
+// display results
