@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:route_tracker/utils/google_maps_places_service.dart';
 import 'package:route_tracker/utils/location_service.dart';
 import 'package:route_tracker/widgets/custom_text_filed.dart';
 
@@ -19,6 +20,8 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   late GoogleMapController googleMapController;
 
   late TextEditingController textEditingController;
+
+  late GooglMapsPlacesService googlMapsPlacesService;
   Set<Marker> markers = {};
 
 
@@ -30,12 +33,21 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
       locationService = LocationService();
 
+      googlMapsPlacesService = GooglMapsPlacesService();
+
       textEditingController = TextEditingController();
-      textEditingController.addListener((){
-        print(textEditingController.text);
-      });
+      fetchPredictions();
       
     super.initState();
+  }
+
+  void fetchPredictions() {
+    textEditingController.addListener(() async {
+      if(textEditingController.text.isNotEmpty){
+        var result = await googlMapsPlacesService.getPrediction(
+        input: textEditingController.text);
+      }
+    });
   }
 
 

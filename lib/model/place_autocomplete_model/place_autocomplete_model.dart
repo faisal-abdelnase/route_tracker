@@ -35,7 +35,7 @@ class PlaceAutocompleteModel {
 			terms: (json['terms'] as List<dynamic>?)
 						?.map((e) => Term.fromJson(e as Map<String, dynamic>))
 						.toList(),
-			types: json['types'] as List<String>?,
+			types: (json['types'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
 		);
 	}
 
