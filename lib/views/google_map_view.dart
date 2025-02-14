@@ -17,6 +17,8 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   late LocationService locationService;
 
   late GoogleMapController googleMapController;
+
+  late TextEditingController textEditingController;
   Set<Marker> markers = {};
 
 
@@ -27,8 +29,20 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       );
 
       locationService = LocationService();
+
+      textEditingController = TextEditingController();
+      textEditingController.addListener((){
+        print(textEditingController.text);
+      });
       
     super.initState();
+  }
+
+
+  @override
+  void dispose() {
+    textEditingController.dispose();
+    super.dispose();
   }
 
 
@@ -51,7 +65,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
             top: 16,
             left: 16,
             right: 16,
-            child: CustomTextField()),
+            child: CustomTextField(textEditingController: textEditingController,)),
       ],
     );
   }
