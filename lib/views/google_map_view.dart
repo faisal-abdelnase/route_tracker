@@ -102,7 +102,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
                 SizedBox(height: 16,),
 
-                CustomListView(places: places),
+                CustomListView(places: places, googlMapsPlacesService: googlMapsPlacesService,),
               ],
             )),
       ],

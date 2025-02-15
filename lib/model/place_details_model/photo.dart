@@ -13,7 +13,7 @@ class Photo {
 
 	factory Photo.fromJson(Map<String, dynamic> json) => Photo(
 				height: json['height'] as int?,
-				htmlAttributions: json['html_attributions'] as List<String>?,
+				htmlAttributions: (json['html_attributions'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
 				photoReference: json['photo_reference'] as String?,
 				width: json['width'] as int?,
 			);
