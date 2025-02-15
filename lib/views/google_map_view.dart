@@ -102,7 +102,17 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
                 SizedBox(height: 16,),
 
-                CustomListView(places: places, googlMapsPlacesService: googlMapsPlacesService,),
+                CustomListView(
+                  places: places, 
+                  googlMapsPlacesService: googlMapsPlacesService,
+                  onPlaceSelect: (placeAutocompleteModel) {
+                    textEditingController.clear();
+                    places.clear();
+                    setState(() {});
+
+                    print(placeAutocompleteModel.geometry!.location!.lat);
+                  },
+                  ),
               ],
             )),
       ],
