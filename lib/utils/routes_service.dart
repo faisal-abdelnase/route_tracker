@@ -10,7 +10,7 @@ class RoutesService{
   final String baseUrl = "https://routes.googleapis.com/directions/v2:computeRoutes";
   final String apiKey = 'AIzaSyAf2EPgR-xW0UwC-o5ziJfntYbNOi8dbWM';
 
-  Future<RoutesModel> fetchRoutes({required LocationInfo origin, required LocationInfo destination, RoutesModifiers? routeModifiers}) async {
+  Future<RoutesModel> fetchRoutes({required LocationInfoModel origin, required LocationInfoModel destination, RoutesModifiers? routeModifiers}) async {
 
     Uri url = Uri.parse(baseUrl);
 
