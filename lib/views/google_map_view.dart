@@ -5,6 +5,7 @@ import 'package:route_tracker/utils/google_maps_places_service.dart';
 import 'package:route_tracker/utils/location_service.dart';
 import 'package:route_tracker/widgets/custom_list_view.dart';
 import 'package:route_tracker/widgets/custom_text_filed.dart';
+import 'package:uuid/uuid.dart';
 
 class GoogleMapView extends StatefulWidget {
   const GoogleMapView({super.key});
@@ -25,6 +26,10 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
   late GooglMapsPlacesService googlMapsPlacesService;
 
+  late Uuid uuid;
+
+  String? sessiontoken;
+
   Set<Marker> markers = {};
   
   List<PlaceAutocompleteModel> places = [];
@@ -34,6 +39,8 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     initalCameraPosition = const CameraPosition(
       target: LatLng(0,0),
       );
+
+      uuid = Uuid();
 
       locationService = LocationService();
 
@@ -47,9 +54,11 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
   void fetchPredictions() {
     textEditingController.addListener(() async {
+      sessiontoken ??= uuid.v4();
       if(textEditingController.text.isNotEmpty){
         var result = await googlMapsPlacesService.getPrediction(
-        input: textEditingController.text);
+          sessiontoken: sessiontoken!,
+          input: textEditingController.text);
 
         places.clear();
         places.addAll(result);
@@ -80,6 +89,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
   @override
   Widget build(BuildContext context) {
+    print(sessiontoken);
     return Stack(
       children: [
         GoogleMap(
@@ -105,13 +115,17 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                 CustomListView(
                   places: places, 
                   googlMapsPlacesService: googlMapsPlacesService,
+
                   onPlaceSelect: (placeAutocompleteModel) {
                     textEditingController.clear();
                     places.clear();
+
+                    sessiontoken = null;
                     setState(() {});
 
-                    print(placeAutocompleteModel.geometry!.location!.lat);
+                    
                   },
+
                   ),
               ],
             )),

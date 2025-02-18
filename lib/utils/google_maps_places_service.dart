@@ -7,10 +7,11 @@ import 'package:route_tracker/model/place_details_model/place_details_model.dart
 class GooglMapsPlacesService{
   final String baseUrl = "https://maps.googleapis.com/maps/api/place";
   final String apiKey = 'AIzaSyAf2EPgR-xW0UwC-o5ziJfntYbNOi8dbWM';
-  Future<List<PlaceAutocompleteModel>> getPrediction({required String input}) async {
+  Future<List<PlaceAutocompleteModel>> getPrediction(
+    {required String input, required String sessiontoken}) async {
 
     var response = await http.get(
-      Uri.parse("$baseUrl/autocomplete/json?key=$apiKey&input=$input"));
+      Uri.parse("$baseUrl/autocomplete/json?key=$apiKey&input=$input&sessiontoken=$sessiontoken"));
 
       if(response.statusCode == 200){
 
