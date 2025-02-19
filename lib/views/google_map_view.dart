@@ -44,6 +44,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   String? sessiontoken;
 
   Set<Marker> markers = {};
+  Set<Polyline> polylines = {};
   
   List<PlaceAutocompleteModel> places = [];
 
@@ -109,6 +110,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       children: [
         GoogleMap(
           markers: markers,
+          polylines: polylines,
           zoomControlsEnabled: false,
           initialCameraPosition: initalCameraPosition,
           onMapCreated: (controller) {
@@ -131,7 +133,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                   places: places, 
                   googlMapsPlacesService: googlMapsPlacesService,
 
-                  onPlaceSelect: (placeAutocompleteModel) {
+                  onPlaceSelect: (placeAutocompleteModel) async {
                     textEditingController.clear();
                     places.clear();
 
@@ -142,7 +144,8 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                       placeAutocompleteModel.geometry!.location!.lat!, 
                       placeAutocompleteModel.geometry!.location!.lng!);
 
-                      getRouteData();
+                      var points = await getRouteData();
+                      displayRoute(points);
 
                     
                   },
@@ -234,6 +237,23 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     
     List<LatLng> points = result.map((e) => LatLng(e.latitude, e.longitude)).toList();
     return points;
+  }
+
+
+
+
+  
+  void displayRoute(List<LatLng> points) {
+    Polyline route = Polyline(
+      polylineId: PolylineId("route"), 
+      points: points,
+      color: Colors.blue,
+      width: 5,
+
+      );
+
+      polylines.add(route);
+      setState(() {});
   }
 }
 
