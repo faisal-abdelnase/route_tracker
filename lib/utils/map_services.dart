@@ -18,6 +18,8 @@ class MapServices {
   late LocationService locationService = LocationService();
   late RoutesService routesService = RoutesService();
 
+  LatLng? currentLocation;
+
 
   Future<void> getPrediction({required String sessiontoken, required String input, required List<PlaceAutocompleteModel> places}) async {
     if(input.isNotEmpty){
@@ -38,11 +40,11 @@ class MapServices {
   }
 
 
-  Future<List<LatLng>> getRouteData({required LatLng currentLocation, required LatLng destinationLocation}) async {
+  Future<List<LatLng>> getRouteData({required LatLng destinationLocation}) async {
 
     LocationInfoModel origin = LocationInfoModel(
       location: LocationModel(
-        latLng: LatLngModel(latitude: currentLocation.latitude, longitude: currentLocation.longitude)
+        latLng: LatLngModel(latitude: currentLocation!.latitude, longitude: currentLocation!.longitude)
         )
       );
 
@@ -119,25 +121,25 @@ class MapServices {
 
 
 
-  Future<LatLng> updatecurrentLocation(
-    {required GoogleMapController googleMapController, required Set<Marker> markers}) async{
+  void updatecurrentLocation(
+    {required GoogleMapController googleMapController, required Set<Marker> markers, required Function onUpdateCurrentLocation}) {
 
-    var locationData = await locationService.getLocation();
-
-        var currentLocation = LatLng(
+      locationService.getRealTimeLocationData((locationData){
+        
+          currentLocation = LatLng(
           locationData.latitude!, locationData.longitude!);
 
           Marker currentLocationMarker = Marker(
             markerId: MarkerId("my location"),
-            position: currentLocation,
+            position: currentLocation!,
             );
 
             markers.add(currentLocationMarker);
 
-            
+            onUpdateCurrentLocation();
 
         CameraPosition myCurrentCameraPosition = CameraPosition(
-          target: currentLocation,
+          target: currentLocation!,
           zoom: 16,
           );
 
@@ -146,8 +148,11 @@ class MapServices {
           );
 
 
-          return currentLocation;
+      });
+
   }
+
+
 
 
   Future<PlaceDetailsModel> getPlaceDetails({required String placeId}) async{

@@ -30,8 +30,6 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
   late Uuid uuid;
 
-  late LatLng currentLocation;
-
   late LatLng destinationLocation;
 
   String? sessiontoken;
@@ -130,7 +128,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                       placeAutocompleteModel.geometry!.location!.lat!, 
                       placeAutocompleteModel.geometry!.location!.lng!);
 
-                      var points = await mapsServices.getRouteData(currentLocation: currentLocation, destinationLocation: destinationLocation);
+                      var points = await mapsServices.getRouteData(destinationLocation: destinationLocation);
                       mapsServices.displayRoute(points, polylines: polylines, googleMapController: googleMapController);
                       setState(() {});
 
@@ -151,12 +149,12 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
 
   
-  void updatecurrentLocation() async {
+  void updatecurrentLocation() {
 
     try {
 
-        currentLocation = await mapsServices.updatecurrentLocation(googleMapController: googleMapController, markers: markers);
-        setState(() {});
+        mapsServices.updatecurrentLocation(onUpdateCurrentLocation: (){setState(() {});} , googleMapController: googleMapController, markers: markers);
+        
 
   } on LocationServiceException catch (e) {
     print(e);
